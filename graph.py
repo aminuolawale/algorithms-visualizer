@@ -6,7 +6,7 @@ from queue import SimpleQueue as Queue
 
 
 class ShortestPath:
-    def __init__(self, cell_size=100, grid_size=(10, 10)):
+    def __init__(self, cell_size=30, grid_size=(20, 20)):
         self.root = Tk()
         self.canvas = Canvas(self.root)
         self.cell_size = cell_size
@@ -22,7 +22,8 @@ class ShortestPath:
         self.visited = []
 
     def draw(self):
-        button = Button(text="Start Search", command=self.start_search)
+        start_button = Button(text="Start Search", command=self.start_search)
+        reset_button = Button(text="Reset", command=self.reset)
         for i in range(self.rows):
             for j in range(self.cols):
                 c = self.canvas.create_rectangle(
@@ -33,10 +34,19 @@ class ShortestPath:
                     outline="#c9c9c9",
                     fill="#fff",
                 )
-        button.pack()
+        start_button.pack()
+        reset_button.pack()
         self.canvas.bind("<Button-1>", lambda e: self.callback(e))
         self.canvas.pack(fill=BOTH, expand=1)
         self.root.mainloop()
+
+    def reset(self):
+        self.start_set = False
+        self.end_set = False
+        self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
+        for i, r in enumerate(self.grid):
+            for j, _ in enumerate(r):
+                self.canvas.itemconfig(j + 1 + self.cols * i, fill="#fff")
 
     def callback(self, e):
         xclick = e.x
